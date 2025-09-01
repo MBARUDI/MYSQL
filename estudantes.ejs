@@ -30,22 +30,23 @@
             <th>Código</th>
             <th>Nome</th>
             <th>Email</th>
+            <th>Ação</th>
         </tr>
 
-        <% if(estudante.length > 0){ %>
-        <% estudante.forEach(function(estudante){ %>
+          <% if (estudante.length > 0 ) { %>
+        <% for (var i = 0; i < estudante.length; i++) { %>
             <tr>
-                <td><%= estudante.id %></td>
-                <td><%= estudante.nome %></td>
-                <td><%= estudante.email %></td>
+                <td><%-estudante[i].id %></td>
+                <td><%-estudante[i].nome %></td>
+                <td><%-estudante[i].email %></td>
+                <td><a href="/delete-estudante?id= <%-estudante[i].id %>">Excluir</a></td>
+                <td><a href="/update-estudantes?id= <%-estudante[i].id %>">Alterar</a></td>
             </tr>
-        <% }); %>
-        <% } else { %>
-            <tr>
-                <td colspan="3">Não temos estudantes cadastrados.</td>
-            </tr>
+             <% } %>
+       <% } else { %>
+            <h1>Não temos estudantes no banco de dados</h1>
         <% } %>
-    </table>        
+    </table> 
 
     <a href="http://localhost:7000" class="btn-voltar">Voltar para o cadastro</a>
 

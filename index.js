@@ -53,7 +53,42 @@ app.get('/estudantes', function(req, res) {
         res.render(__dirname + "/estudantes", { estudante: result });
     });
 });
+//Rota do delete
+app.get('/delete-estudante', function(req, res) {
+    var sql = "DELETE FROM estudante WHERE id=?";
+    var id = req.query.id;
+    conexao.query(sql, [id], function(error, result) {
+        if (error) console.log(error);
+        res.redirect('/estudantes');
+        });
+    });
 
-app.listen(7000, () => {
+//Rota Update
+app.get('/update-estudantes', function(req, res) {
+    var sql = "select * from estudante WHERE id=?";
+    var id = req.query.id;
+    conexao.query(sql, [id], function(error, result) {
+        if (error) console.log(error);
+        res.render(__dirname + "/alterarestudantes", { estudante: result});
+        
+        });
+    });
+
+app.post('/update-estudantes', function(req, res) {
+        var id = req.body.id;
+        var nome = req.body.nome;
+        var email = req.body.email;
+        var senha = req.body.senha;
+        var sql = "UPDATE estudante SET nome=?, email=?, senha=? WHERE id=?";
+        var id = req.body.id;
+        conexao.query(sql, [nome, email, senha, id], function(error, result) {
+            if (error) console.log(error);
+            res.render(__dirname + '/estudantes' { estudante: result });
+            res.redirect('/estudantes');
+        });
+    });
+
+// Inicia o servidor na porta 7000
+        app.listen(7000, () => {
     console.log("Servidor rodando na porta 7000");
 });
