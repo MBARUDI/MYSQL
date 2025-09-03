@@ -2,11 +2,16 @@ var conexao = require('./conexaoBanco');
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
+var methodOverride = require('method-override');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(methodOverride('_method'));
+
 
 app.set('view engine', 'ejs');
+app.set('views', __dirname + '/views');
+
 
 // 1. Conecte ao banco de dados uma única vez, quando a aplicação for iniciada.
 // Isso evita que o erro de handshake aconteça.
@@ -50,17 +55,22 @@ app.get('/estudantes', function(req, res) {
             return res.status(500).send('Erro ao buscar estudantes');
         }
         //console.log(result);
-        res.render(__dirname + "/estudantes", { estudante: result });
+        res.render('estudantes', { estudante: result });
     });
 });
 //Rota do delete
-app.get('/delete-estudante', function(req, res) {
-    var sql = "DELETE FROM estudante WHERE id=?";
-    var id = req.query.id;
-    conexao.query(sql, [id], function(error, result) {
-        if (error) console.log(error);
-        res.redirect('/estudantes');
+app.delete('/delete-estudantes', function(req, res) {
+   const id = req.body.id;
+   conexao.query('DELETE FROM estudante WHERE id = ?', [id], function(error) {
+         if (error) {
+                console.error('Erro ao deletar estudante:', error);
+                return res.status(500).send('Erro ao deletar estudante');
+            }
+            res.redirect('estudantes');
         });
+            
+
+
     });
 
 //Rota Update
@@ -74,19 +84,23 @@ app.get('/update-estudantes', function(req, res) {
         });
     });
 
-app.post('/update-estudantes', function(req, res) {
-        var id = req.body.id;
-        var nome = req.body.nome;
-        var email = req.body.email;
-        var senha = req.body.senha;
-        var sql = "UPDATE estudante SET nome=?, email=?, senha=? WHERE id=?";
-        var id = req.body.id;
-        conexao.query(sql, [nome, email, senha, id], function(error, result) {
-            if (error) console.log(error);
-            res.render(__dirname + '/estudantes' { estudante: result });
-            res.redirect('/estudantes');
-        });
+app.put('/update-estudantes', function(req, res) {
+    var id = req.body.id;
+    var nome = req.body.nome;
+    var email = req.body.email;
+    var senha = req.body.senha;
+    var sql = "UPDATE estudante SET nome=?, email=?, senha=? WHERE id=?";
+    conexao.query(sql, [nome, email, senha, id], function(error, result) {
+        if (error) {
+            console.log(error);
+            return res.status(500).send('Erro ao atualizar estudante');
+        }
+       
+        res.redirect('/estudantes');
     });
+});
+        
+
 
 // Inicia o servidor na porta 7000
         app.listen(7000, () => {

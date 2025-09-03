@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Estudantes</title>
+    <style>
+        /* Estilo para o botão */
+        .btn-voltar {
+            background-color: #007bff; /* Cor de fundo azul */
+            color: white; /* Cor do texto branca */
+            padding: 10px 20px; /* Espaçamento interno */
+            border: none; /* Remove a borda padrão do botão */
+            border-radius: 5px; /* Deixa as bordas arredondadas */
+            text-decoration: none; /* Remove o sublinhado do link */
+            display: inline-block; /* Permite que o link se comporte como um bloco */
+            margin-top: 20px; /* Adiciona um espaço acima do botão */
+        }
+        
+        .btn-voltar:hover {
+            background-color: #0056b3; /* Cor azul mais escura ao passar o mouse */
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Lista de Estudantes</h1>
+    <table border="1" width="100%">
+        <tr>
+            <th>Código</th>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Ação</th>
+        </tr>
+
+          <% if (estudante.length > 0 ) { %>
+        <% for (var i = 0; i < estudante.length; i++) { %>
+            <tr>
+                <td><%-estudante[i].id %></td>
+                <td><%-estudante[i].nome %></td>
+                <td><%-estudante[i].email %></td>
+                <td>
+                    <form action="/delete-estudantes?_method=DELETE" method="POST" style="display:inline;">
+                        <input type="hidden" name="id" value="<%-estudante[i].id %>">
+                        <button type="submit" onclick="return confirm('Tem certeza que deseja excluir o estudante?')">Excluir</button>
+                    </form>
+
+
+                </td>
+                <td><a href="/update-estudantes?id= <%-estudante[i].id %>">Alterar</a></td>
+            </tr>
+             <% } %>
+       <% } else { %>
+            <h1>Não temos estudantes no banco de dados</h1>
+        <% } %>
+    </table> 
+
+    <a href="http://localhost:7000" class="btn-voltar">Voltar para o cadastro</a>
+
+</body>
+</html>
